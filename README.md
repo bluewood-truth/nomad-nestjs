@@ -72,3 +72,62 @@ Nomad Coders의 강좌 [NestJS로 API 만들기](https://nomadcoders.co/nestjs-f
 
 - 마찬가지로 요청의 Body를 가져오고 싶으면 `@Body()` 데코레이터를, 쿼리를 가져오고 싶으면 `@Query('[쿼리 키]')` 데코레이터를 사용해야 함
 
+- 요청 중에 주고받는 데이터에 타입을 부여하기 위해 **DTO(Data Transfer Object)**를 작성함
+
+  - 타입이 부여됨으로써 어떤 데이터가 오가야 하는지 명확해짐
+
+  - NestJS의 `ValidationPipe`를 통해 데이터의 타입에 대해 유효성 검사를 할 수 있게 해줌
+
+  - `class-validator`, `class-transformer` 라이브러리를 우선 설치해야 함
+
+  - 옵션을 통해 추가적인 처리를 자동으로 할 수 있음
+
+    ```typescript
+    import { ValidationPipe } from '@nestjs/common';
+    import { NestFactory } from '@nestjs/core';
+    import { AppModule } from './app.module';
+    
+    async function bootstrap() {
+      const app = await NestFactory.create(AppModule);
+      app.useGlobalPipes(
+        new ValidationPipe({
+          whitelist: true, // decorator가 없는 property를 제외함
+          forbidNonWhitelisted: true, // property를 제외하는 대신 예외를 던짐
+          transform: true, // 요청 데이터의 타입을 자동으로 변환함
+        }),
+      );
+      await app.listen(3000);
+    }
+    bootstrap();
+    ```
+
+  - `@nestjs/mapped-types`의 `PartialType`을 통해 기존 DTO 타입으로부터 부분적인 프로퍼티만 갖는 새로운 타입을 만들 수 있음
+
+    ```typescript
+    // create-movie.dto.ts
+    
+    import { IsNumber, IsOptional, IsString } from 'class-validator';
+    
+    export class CreateMovieDto {
+      @IsString()
+      readonly title: string;
+    
+      @IsNumber()
+      readonly year: number;
+    
+      @IsString({ each: true })
+      @IsOptional()
+      readonly genres: string[];
+    }
+    ```
+
+    ```typescript
+    // update-movie.dto.ts
+    
+    import { PartialType } from '@nestjs/mapped-types';
+    import { CreateMovieDto } from './create-movie.dto';
+    
+    // CreateMovieDto의 모든 property를 선택적으로 갖는 클래스
+    export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
+    ```
+
