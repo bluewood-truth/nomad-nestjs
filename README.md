@@ -70,3 +70,5 @@ Nomad Coders의 강좌 [NestJS로 API 만들기](https://nomadcoders.co/nestjs-f
   }
   ```
 
+- 마찬가지로 요청의 Body를 가져오고 싶으면 `@Body()` 데코레이터를, 쿼리를 가져오고 싶으면 `@Query('[쿼리 키]')` 데코레이터를 사용해야 함
+
