@@ -1,73 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<h1 align="center">NestJS로 API 만들기</h1>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Nomad Coders의 강좌 [NestJS로 API 만들기](https://nomadcoders.co/nestjs-fundamentals)를 공부하며 정리한 Repo입니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 개념 정리
 
-## Description
+### NestJS?
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js, Express는 자유도가 너무 높음 -> 모든 프로젝트 구조를 개발자가 고민해야 함
 
-## Installation
+- NestJS는 Java의 Spring, Python의 Django처럼 안정적인 프로젝트를 위해 따라야 할 규칙과 구조를 제공함
 
-```bash
-$ npm install
-```
+### 프로젝트 생성
 
-## Running the app
+- 새 NestJS 프로젝트를 생성하기 위해 `@nestjs/cli`를 설치해야 함
 
-```bash
-# development
-$ npm run start
+  ```shell
+  $ npm install -g add @nestjs/cli
+  ```
 
-# watch mode
-$ npm run start:dev
+  (보통은 `yarn`을 대신 써도 무방하지만 `@nestjs/cli`를 설치할 때는 문제가 좀 있어 가급적 `npm` 사용)
 
-# production mode
-$ npm run start:prod
-```
+- `nest new` 명령어로 새 프로젝트 생성
 
-## Test
+### NestJS의 아키텍처
 
-```bash
-# unit tests
-$ npm run test
+- NestJS는 기본적으로 **데코레이터(decorator)**와 함께 사용함
 
-# e2e tests
-$ npm run test:e2e
+- NestJS는 main.ts에서 시작함
 
-# test coverage
-$ npm run test:cov
-```
+- main.ts에서는 `AppModule`로부터 애플리케이션을 생성함
 
-## Support
+- NestJS는 여러 개의 **모듈**로 구성되며, `AppModule`은 전체 애플리케이션의 루트 모듈임
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- 모듈은 기본적으로 controller와 service로 나뉨
 
-## Stay in touch
+  - **controller**: url을 가져와서 그에 맞는 함수를 실행함
+    - Express의 라우터와 같은 역할
+    - `@Get` 데코레이터를 통해 url을 명시하고 이에 대해 실행할 함수를 작성할 수 있음 (Express의 `app.get()`)
+    - 물론 `@Get`만이 아니라 다른 HTTP Method에 대한 데코레이터도 존재
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+  - **service**: 모듈에서 동작하는 비즈니스 로직을 담당함
+    - NestJS는 모듈을 url을 함수와 연결하는 controller와 비즈니스 로직을 담당하는 service로 분리함
+    - controller는 url을 받아 함수를 리턴하는 역할을 하며, service에서는 실제 로직을 처리하며 필요에 따라 DB와 연결하는 등의 역할을 함
 
-## License
+### REST API 개발
 
-Nest is [MIT licensed](LICENSE).
+- NestJS CLI를 통해 다양한 명령을 수행할 수 있음
+- `nest generate controller [컨트롤러명]`: 새 컨트롤러를 생성하고 AppModule에 추가해줌
+  - 약어는 `nest g co [컨트롤러명]`
+
+- `@Controller('[컨트롤러명]')` 데코레이터를 통해 지정한 컨트롤러 이름은 url의 엔트리 포인트를 결정함
+
+  - 예를 들어 `@Controller('movies')`라면 해당 컨트롤러의 모든 url은 `/movies/~`가 됨
+
+- 컨트롤러의 메서드에서 url 파라미터를 사용하려면 `@Param('[파라미터명]')` 데코레이터를 사용해야 함
+
+  ```typescript
+  @Controller('movies') // 컨트롤러의 이름은 url의 엔트리 포인트를 결정
+  export class MoviesController {
+    @Get()
+    getAll() {
+      return 'This will return all movies';
+    }
+  
+    @Get('/:id') // url 파라미터를 사용하려면 @Param 데코레이터 사용
+    getOne(@Param('id') id: string) {
+      return `This will return one movie with the id: ${id}`;
+    }
+  }
+  ```
+
