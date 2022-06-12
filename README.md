@@ -131,3 +131,48 @@ Nomad Coders의 강좌 [NestJS로 API 만들기](https://nomadcoders.co/nestjs-f
     export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
     ```
 
+### 유닛 테스트
+
+- 테스트는 두 종류가 있음
+  - **유닛 테스트**: 시스템을 구성하는 각각의 유닛(함수)를 하나씩 테스트
+  - **E2E(end-to-end) 테스트**: 사용자 입장에서 시나리오에 따라 전체 시스템을 테스트
+
+- **Jest**: JavaScript를 위한 테스트 프레임워크
+- NestJS에서는 Jest가 .spec.ts 파일을 찾아볼 수 있도록 설정되어 있음
+  - `test:cov`
+  - `test:watch`
+
+- .spec.ts 파일의 기본적인 구조는 다음과 같음
+
+  ```typescript
+  describe('MoviesService', () => {
+    let service: MoviesService;
+  
+    beforeEach(async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: [MoviesService],
+      }).compile();
+  
+      service = module.get<MoviesService>(MoviesService);
+    });
+  
+    it('should be defined', () => {
+      expect(service).toBeDefined();
+    });
+      
+    describe('getAll', () => {
+      it('should return an array', () => {
+        const result = service.getAll();
+        expect(result).toBeInstanceOf(Array);
+      });
+    });
+      
+    //...
+  });
+  ```
+
+  - `describe()`: 연관된 테스트 여러개를 묶어 하나의 테스트 블록을 생성
+  - `it()`: `test()`의 alias. 하나의 단위 테스트를 수행함. 첫 번째 인수로 오는 테스트 이름과 합쳐 문장 형태가 되도록 하여 가독성을 높이기 위함
+  - `beforeEach()`, `afterEach()`: 각 유닛 테스트 전, 후에 공통처리할 코드를 추가할 수 있음
+  - `beforeAll()`, `afterAll()`: 전체 테스트 전, 후에 처리할 코드를 추가할 수 있음 (DB연결, DB 초기화 등 무거운 작업)
+
