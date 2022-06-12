@@ -176,3 +176,9 @@ Nomad Coders의 강좌 [NestJS로 API 만들기](https://nomadcoders.co/nestjs-f
   - `beforeEach()`, `afterEach()`: 각 유닛 테스트 전, 후에 공통처리할 코드를 추가할 수 있음
   - `beforeAll()`, `afterAll()`: 전체 테스트 전, 후에 처리할 코드를 추가할 수 있음 (DB연결, DB 초기화 등 무거운 작업)
 
+### E2E 테스트
+
+- 보통 개발할 때는 평소 사용하는 DB, 테스트용 DB를 따로 둠
+- NestJS에서 E2E 테스트는 `test/app.e2e-spec.ts`에서 수행함
+- 테스트 환경의 `app`도 실제 `app`과 동일한 설정(파이프 등)을 해줘야 함
+- 
